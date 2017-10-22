@@ -1,6 +1,7 @@
 goog.provide('todo.app');
 
 goog.require('goog.events.KeyCodes');
+goog.require('goog.History');
 goog.require('goog.string');
 goog.require('todo.components');
 goog.require('todo.models.Item');
@@ -9,27 +10,40 @@ goog.require('todo.models.ItemList');
 goog.scope(function() {
     var incrementalDom = goog.module.get('incrementaldom');
 
-    todo.app.init = function() {
-        var onChange = function() {
-            todo.app.render();
-        };
+    todo.app.TodoList = class {
+        constructor(element) {
+            this.element = element;
+            this.itemList = new todo.models.ItemList([]);
+            this.itemList.onChange = this.render.bind(this);
 
-        var list = [];
-        for (var i = 0; i < 1000; i++) {
-            list.push(new todo.models.Item('test-' + i, onChange));
+            this.history = new goog.History();
+            this.history.setEnabled(true);
+            goog.events.listen(
+                this.history,
+                goog.History.EventType.NAVIGATE,
+                this.render.bind(this)
+            );
         }
 
-        var state = new todo.models.ItemList(list, onChange);
-        todo.app.render = function() {
+        render() {
             incrementalDom.patch(
-                document.getElementById('app'),
+                this.element,
                 todo.components.todoList,
-                state
+                {
+                    itemList: this.itemList,
+                    route: this.history.getToken()
+                }
             );
-        };
-        todo.app.render();
+        }
+    };
+
+    todo.app.init = function() {
+        var app = new todo.app.TodoList(
+            document.getElementById('app')
+        );
+        app.render();
         todo.app.onReload = function() {
-            todo.app.render();
+            app.render();
         };
     };
 });

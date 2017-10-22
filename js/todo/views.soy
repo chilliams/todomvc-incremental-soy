@@ -1,7 +1,9 @@
 {namespace todo.views}
 
 {template .todo}
+{@param route: string}
 {@param itemList: ?}
+{@param totalCount: int}
 {@param todoCount: int}
 {@param completedCount: int}
 {@param newTodoKeyup: ?}
@@ -17,27 +19,45 @@
              autofocus>
     </header>
     // This section should be hidden by default and shown when there are items
-    <section class="main" {if length($itemList.items) == 0}hidden{/if}>
-    <input id="toggle-all"
-           class="toggle-all {if length($itemList.items) == $completedCount}checked{/if}"
-           type="checkbox"
-           onchange="{$toggleAll}">
+    <section class="main" {if $totalCount == 0}hidden{/if}>
+      <input id="toggle-all"
+             class="toggle-all {if length($itemList.items) == $completedCount}checked{/if}"
+             type="checkbox"
+             onchange="{$toggleAll}">
       <label for="toggle-all">Mark all as complete</label>
       {call .todoList data="all" /}
     </section>
-    <footer class="footer" {if length($itemList.items) == 0}hidden{/if}>
+    <footer class="footer" {if $totalCount == 0}hidden{/if}>
       // This should be `0 items left` by default
-      <span class="todo-count"><strong>{$todoCount}</strong> item left</span>
+      <span class="todo-count">
+        {if $todoCount == 1}
+          <strong>{$todoCount}</strong> item left
+        {else}
+          <strong>{$todoCount}</strong> items left
+        {/if}
+      </span>
       // Remove this if you don't implement routing
       <ul class="filters">
         <li>
-          <a class="selected" href="#/">All</a>
+          <a
+            {if $route != '/active' and $route != '/completed'}
+              class="selected"
+            {/if}
+            href="#/">All</a>
         </li>
         <li>
-          <a href="#/active">Active</a>
+          <a
+            {if $route == '/active'}
+              class="selected"
+            {/if}
+            href="#/active">Active</a>
         </li>
         <li>
-          <a href="#/completed">Completed</a>
+          <a
+            {if $route == '/completed'}
+              class="selected"
+            {/if}
+            href="#/completed">Completed</a>
         </li>
       </ul>
       // Hidden if no completed items are left
@@ -50,7 +70,10 @@
   </section>
   <footer class="info">
     <p>Double-click to edit a todo</p>
-    <p>Created by <a href="http://github.com/chilliams">Christopher Williams</a></p>
+    <p>
+      Created by
+      <a href="http://github.com/chilliams">Christopher Williams</a>
+    </p>
     // <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
   </footer>
 
@@ -58,13 +81,31 @@
 
 
 {template .todoList}
+{@param route: string}
 {@param itemList: ?}
 
   <ul class="todo-list">
     {foreach $item in $itemList.items}
-      {call todo.components.listItem data="all"}
-        {param item: $item /}
-      {/call}
+      {if $route == '/active'}
+        {if not $item.completed}
+          {call todo.components.listItem}
+            {param itemList: $itemList /}
+            {param item: $item /}
+          {/call}
+        {/if}
+      {elseif $route == '/completed'}
+        {if $item.completed}
+          {call todo.components.listItem}
+            {param itemList: $itemList /}
+            {param item: $item /}
+          {/call}
+        {/if}
+      {else}
+        {call todo.components.listItem}
+          {param itemList: $itemList /}
+          {param item: $item /}
+        {/call}
+      {/if}
     {/foreach}
   </ul>
 
@@ -72,7 +113,8 @@
 
 
 {template .listItem}
-{@param item: [text:string, completed:bool, editing:bool]}
+{@param text: any}
+{@param item: [completed:bool, editing:bool]}
 {@param setCompleted: ?}
 {@param startEdit: ?}
 {@param stopEdit: ?}
@@ -85,13 +127,13 @@
            type="checkbox"
            onclick="{$setCompleted}">
     <label ondblclick="{$startEdit}">
-      {$item.text}
+      {$text}
     </label>
     <button class="destroy" onclick="{$destroy}">
     </button>
   </div>
   <input class="edit"
-         value="{$item.text}"
+         value="{$text}"
          onkeyup="{$editKeyup}"
          onblur="{$stopEdit}"
          {if $item.editing}id="editing"{/if}>
