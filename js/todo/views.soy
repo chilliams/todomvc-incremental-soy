@@ -88,20 +88,20 @@
     {foreach $item in $itemList.items}
       {if $route == '/active'}
         {if not $item.completed}
-          {call todo.components.listItem}
+          {call todo.presenters.listItem}
             {param itemList: $itemList /}
             {param item: $item /}
           {/call}
         {/if}
       {elseif $route == '/completed'}
         {if $item.completed}
-          {call todo.components.listItem}
+          {call todo.presenters.listItem}
             {param itemList: $itemList /}
             {param item: $item /}
           {/call}
         {/if}
       {else}
-        {call todo.components.listItem}
+        {call todo.presenters.listItem}
           {param itemList: $itemList /}
           {param item: $item /}
         {/call}

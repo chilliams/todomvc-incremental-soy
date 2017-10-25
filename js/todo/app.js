@@ -3,18 +3,18 @@ goog.provide('todo.app');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.History');
 goog.require('goog.string');
-goog.require('todo.components');
+goog.require('incrementaldom');
+goog.require('todo.presenters');
 goog.require('todo.models.Item');
 goog.require('todo.models.ItemList');
 
 goog.scope(function() {
-    var incrementalDom = goog.module.get('incrementaldom');
-
     todo.app.TodoList = class {
         constructor(element) {
             this.element = element;
-            this.itemList = new todo.models.ItemList([]);
-            this.itemList.onChange = this.render.bind(this);
+            this.itemList = new todo.models.ItemList(
+                this.render.bind(this)
+            );
 
             this.history = new goog.History();
             this.history.setEnabled(true);
@@ -26,9 +26,9 @@ goog.scope(function() {
         }
 
         render() {
-            incrementalDom.patch(
+            incrementaldom.patch(
                 this.element,
-                todo.components.todoList,
+                todo.presenters.todoList,
                 {
                     itemList: this.itemList,
                     route: this.history.getToken()

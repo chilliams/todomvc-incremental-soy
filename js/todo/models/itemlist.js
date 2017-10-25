@@ -4,15 +4,15 @@ goog.require('goog.string');
 goog.require('todo.models.Item');
 
 todo.models.ItemList = class {
-    constructor(items, onChange) {
-        this.items = items;
+    constructor(onChange) {
+        this.items = [];
         this.onChange = onChange;
     }
 
     addItem(text) {
         var value = goog.string.trim(text);
         if (!goog.string.isEmptyOrWhitespace(value)) {
-            this.items.push(new todo.models.Item(value, this.onChange));
+            this.items.push(new todo.models.Item(this.onChange, value));
             this.onChange();
         }
     }

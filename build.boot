@@ -18,7 +18,6 @@
                  [http-kit "2.2.0"]
                  [org.clojure/data.json "0.2.6"]
                  [com.google.template/soy "2017-04-23"]
-                 [cljsjs/incremental-dom "0.5.2-1"]
                  [bidi "2.1.2"]
                  ])
 

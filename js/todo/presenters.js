@@ -1,11 +1,11 @@
-goog.provide('todo.components');
+goog.provide('todo.presenters');
 
 goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('goog.events.KeyCodes');
 goog.require('todo.views');
 
-todo.components.todoList = function(params) {
+todo.presenters.todoList = function(params) {
     var itemList = params.itemList;
     var route = params.route;
 
@@ -23,6 +23,15 @@ todo.components.todoList = function(params) {
     return todo.views.todo({
         route: route,
         itemList: itemList,
+        items: itemList.items.filter(function(item) {
+            if (route === '/active' && item.completed) {
+                return false;
+            }
+            if (route === '/completed' && !item.completed) {
+                return false;
+            }
+            return true;
+        }),
         totalCount: totalCount,
         todoCount: todoCount,
         completedCount: completedCount,
@@ -47,7 +56,7 @@ todo.components.todoList = function(params) {
     });
 };
 
-todo.components.listItem = function(params) {
+todo.presenters.listItem = function(params) {
     var itemList = params.itemList;
     var item = params.item;
 
@@ -69,14 +78,13 @@ todo.components.listItem = function(params) {
             item.setText(event.currentTarget.value);
         },
         editKeyup: function(event) {
-            var editbox = event.currentTarget;
             if (event.keyCode === goog.events.KeyCodes.ESC) {
                 // hack for inputbox value
                 item.stopEdit();
                 return;
             }
             if (event.keyCode === goog.events.KeyCodes.ENTER) {
-                item.setText(editbox.value);
+                item.setText(event.currentTarget.value);
             }
         },
         destroy: function(event) {

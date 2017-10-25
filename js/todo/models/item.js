@@ -3,9 +3,9 @@ goog.provide('todo.models.Item');
 goog.require('goog.string');
 
 todo.models.Item = class {
-    constructor(text, onChange) {
-        this.text = text;
+    constructor(onChange, text) {
         this.onChange = onChange;
+        this.text = text;
         this.completed = false;
         this.editing = false;
     }
