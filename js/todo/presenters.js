@@ -35,6 +35,7 @@ todo.presenters.todoList = function(params) {
         totalCount: totalCount,
         todoCount: todoCount,
         completedCount: completedCount,
+
         newTodoKeyup: function(event) {
             var value = goog.string.trim(
                 event.currentTarget.value
@@ -63,6 +64,8 @@ todo.presenters.listItem = function(params) {
     return todo.views.listItem({
         text: new String(item.text),
         item: item,
+        key: goog.getUid(item),
+
         setCompleted: function(event) {
             item.setCompleted(
                 !goog.dom.classlist.contains(event.currentTarget, "checked")

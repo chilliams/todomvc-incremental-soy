@@ -1,6 +1,6 @@
 (set-env!
  :source-paths #{"js" "thirdparty"}
- :resource-paths #{"public" "node_modules"}
+ :resource-paths #{"public"}
 
  :dependencies '[
                  [org.clojure/clojure "1.8.0"]         ;; add CLJ

@@ -210,7 +210,7 @@ body {
     padding: 15px 15px 15px 60px;
     display: block;
     line-height: 1.2;
-    /* transition: color 0.4s; */
+    transition: color 0.4s;
 }
 
 .todo-list li.completed label {
