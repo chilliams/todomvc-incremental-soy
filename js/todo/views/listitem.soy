@@ -1,0 +1,28 @@
+{namespace todo.views.ListItem}
+
+{template .render}
+{@param text: any}
+{@param item: [completed:bool, editing:bool]}
+{@param key: number}
+{@param setCompleted: ?}
+{@param startEdit: ?}
+{@param stopEdit: ?}
+{@param editKeyup: ?}
+{@param destroy: ?}
+
+  <li key={$key} class="{if $item.completed}completed{/if} {if $item.editing}editing{/if}">
+    <div class="view">
+      <input class="toggle {if $item.completed}checked{/if}"
+             type="checkbox"
+             onclick={$setCompleted}>
+      <label ondblclick={$startEdit}>{$text}</label>
+      <button class="destroy" onclick={$destroy}></button>
+    </div>
+    <input class="edit"
+           value="{$text}"
+           onkeyup={$editKeyup}
+           onblur={$stopEdit}
+           {if $item.editing}id="editing"{/if}>
+  </li>
+
+{/template}

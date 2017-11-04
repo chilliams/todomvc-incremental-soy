@@ -1,3 +1,5 @@
-{:require [soy todo.app todo.presenters]
- :compiler-options {:asset-path "js/main.out"}
+{:require [soy todo.app]
+ :compiler-options {:language-in :es6
+                    :language-out :es5}
+ :init-fns [todo.app/init]
  :boot-reload {:on-jsload todo.app/onReload}}

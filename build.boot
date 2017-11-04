@@ -67,6 +67,7 @@
               (compile-soy! in-file out-file)))
           (-> fileset
               (boot/add-source tmp)
+              (boot/add-resource tmp) ; for debugging
               (boot/commit!)
               next-handler))))))
 
@@ -85,3 +86,10 @@
    (cljs-repl) ;; before cljs
    (cljs)
    (target :dir #{"target"})))
+
+(deftask prod
+  []
+  (comp
+   (soy)
+   (cljs :optimizations :advanced)
+   (target)))

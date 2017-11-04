@@ -1,12 +1,12 @@
 goog.provide('todo.app');
 
-goog.require('goog.events.KeyCodes');
 goog.require('goog.History');
+goog.require('goog.events.KeyCodes');
 goog.require('goog.string');
 goog.require('incrementaldom');
-goog.require('todo.presenters');
 goog.require('todo.models.Item');
 goog.require('todo.models.ItemList');
+goog.require('todo.presenters.TodoList');
 
 goog.scope(function() {
     todo.app.TodoList = class {
@@ -28,7 +28,7 @@ goog.scope(function() {
         render() {
             incrementaldom.patch(
                 this.element,
-                todo.presenters.todoList,
+                todo.presenters.TodoList.render,
                 {
                     itemList: this.itemList,
                     route: this.history.getToken()

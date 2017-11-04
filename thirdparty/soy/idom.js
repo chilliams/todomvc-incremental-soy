@@ -19,17 +19,17 @@
  *
  */
 
-goog.module('soy.idom');
+goog.provide('soy.idom');
 
-var SanitizedHtml = goog.require('goog.soy.data.SanitizedHtml');
-var incrementaldom = goog.require('incrementaldom');
-var soy = goog.require('goog.soy');
+goog.require('goog.soy.data.SanitizedHtml');
+goog.require('incrementaldom');
+goog.require('goog.soy');
 
 /**
  * Calls an expression in case of a function or outputs it as text content.
  * @param {string|number|boolean|function()?} expr
  */
-exports.renderDynamicContent = function(expr) {
+soy.idom.renderDynamicContent = function(expr) {
   if (goog.isFunction(expr)) {
     expr();
   } else if (expr != null) {
@@ -41,19 +41,19 @@ exports.renderDynamicContent = function(expr) {
  * Prints an expression depending on its type.
  * @param {!SanitizedHtml|string|number|boolean|function()} expr
  */
-exports.print = function(expr) {
-  if (expr instanceof SanitizedHtml) {
+soy.idom.print = function(expr) {
+  if (expr instanceof goog.soy.data.SanitizedHtml) {
     // For HTML content we need to insert a custom element where we can place
     // the content without incremental dom modifying it.
     var el = incrementaldom.elementOpen('html-blob');
     var content = expr.toString();
     if (el.__innerHTML !== content) {
-      soy.renderHtml(el, expr);
+      goog.soy.renderHtml(el, expr);
       el.__innerHTML = content;
     }
     incrementaldom.skip();
     incrementaldom.elementClose('html-blob');
   } else {
-    exports.renderDynamicContent(expr);
+    soy.idom.renderDynamicContent(expr);
   }
 };

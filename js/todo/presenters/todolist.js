@@ -1,11 +1,11 @@
-goog.provide('todo.presenters');
+goog.provide('todo.presenters.TodoList');
 
 goog.require('goog.array');
 goog.require('goog.dom.classlist');
 goog.require('goog.events.KeyCodes');
-goog.require('todo.views');
+goog.require('todo.views.TodoList');
 
-todo.presenters.todoList = function(params) {
+todo.presenters.TodoList.render = function(params) {
     var itemList = params.itemList;
     var route = params.route;
 
@@ -20,7 +20,7 @@ todo.presenters.todoList = function(params) {
         }
     }
 
-    return todo.views.todo({
+    todo.views.TodoList.render({
         route: route,
         itemList: itemList,
         items: itemList.items.filter(function(item) {
@@ -53,45 +53,6 @@ todo.presenters.todoList = function(params) {
         },
         clearCompleted: function(event) {
             itemList.clearCompleted();
-        }
-    });
-};
-
-todo.presenters.listItem = function(params) {
-    var itemList = params.itemList;
-    var item = params.item;
-
-    return todo.views.listItem({
-        text: new String(item.text),
-        item: item,
-        key: goog.getUid(item),
-
-        setCompleted: function(event) {
-            item.setCompleted(
-                !goog.dom.classlist.contains(event.currentTarget, "checked")
-            );
-        },
-        startEdit: function(event) {
-            item.startEdit();
-            // hack for focus
-            var editbox = document.getElementById('editing');
-            editbox.focus();
-        },
-        stopEdit: function(event) {
-            item.setText(event.currentTarget.value);
-        },
-        editKeyup: function(event) {
-            if (event.keyCode === goog.events.KeyCodes.ESC) {
-                // hack for inputbox value
-                item.stopEdit();
-                return;
-            }
-            if (event.keyCode === goog.events.KeyCodes.ENTER) {
-                item.setText(event.currentTarget.value);
-            }
-        },
-        destroy: function(event) {
-            itemList.remove(item);
         }
     });
 };
