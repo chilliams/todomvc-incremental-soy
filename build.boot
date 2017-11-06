@@ -1,10 +1,13 @@
 (set-env!
  :source-paths #{"js" "thirdparty"}
  :resource-paths #{"public"}
-
+ :repositories [["clojars" {:url "https://repo.clojars.org/"}]
+                ["maven-central" {:url "https://repo1.maven.org/maven2/"}]
+                ["github.com/chilliams" {:url "https://github.com/chilliams/maven-repo/raw/master/"
+                                         :checksum :ignore}]]
  :dependencies '[
                  [org.clojure/clojure "1.8.0"]         ;; add CLJ
-                 [org.clojure/clojurescript "0.0-SNAPSHOT"]
+                 [org.clojure/clojurescript "0.0-chilliams-SNAPSHOT"]
                  [adzerk/boot-cljs "2.1.4"]
                  [pandeiro/boot-http "0.8.3"]
                  [adzerk/boot-reload "0.5.2"]
@@ -17,7 +20,7 @@
                  [cljsjs/redux "3.6.0-0"]
                  [http-kit "2.2.0"]
                  [org.clojure/data.json "0.2.6"]
-                 [com.google.template/soy "2017-04-23"]
+                 [com.google.template/soy "2017-04-23-chilliams"]
                  [bidi "2.1.2"]
                  ])
 
