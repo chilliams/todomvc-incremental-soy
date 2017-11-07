@@ -1,49 +1,54 @@
 goog.provide('todo.app');
 
 goog.require('goog.History');
-goog.require('goog.events.KeyCodes');
-goog.require('goog.string');
 goog.require('incrementaldom');
-goog.require('todo.models.Item');
-goog.require('todo.models.ItemList');
-goog.require('todo.presenters.TodoList');
+goog.require('todo.models.TaskList');
+goog.require('todo.TodoListViewModel');
+goog.require('todo.views');
 
-goog.scope(function() {
-    todo.app.TodoList = class {
-        constructor(element) {
-            this.element = element;
-            this.itemList = new todo.models.ItemList(
-                this.render.bind(this)
-            );
-
-            this.history = new goog.History();
-            this.history.setEnabled(true);
-            goog.events.listen(
-                this.history,
-                goog.History.EventType.NAVIGATE,
-                this.render.bind(this)
-            );
-        }
-
-        render() {
-            incrementaldom.patch(
-                this.element,
-                todo.presenters.TodoList.render,
-                {
-                    itemList: this.itemList,
-                    route: this.history.getToken()
-                }
-            );
-        }
-    };
-
-    todo.app.init = function() {
-        var app = new todo.app.TodoList(
-            document.getElementById('app')
+todo.app.TodoList = class {
+    constructor(element) {
+        this.element = element;
+        this.taskList = new todo.models.TaskList(
+            this.updatePage.bind(this)
         );
-        app.render();
-        todo.app.onReload = function() {
-            app.render();
-        };
+
+        this.history = new goog.History();
+        this.history.setEnabled(true);
+        goog.events.listen(
+            this.history,
+            goog.History.EventType.NAVIGATE,
+            this.updatePage.bind(this)
+        );
+    }
+
+    updatePage() {
+        console.time('update page');
+        this.render(
+            todo.views.TodoList,
+            new todo.TodoListViewModel({
+                taskList: this.taskList,
+                route: this.history.getToken()
+            })
+        );
+        console.timeEnd('update page');
+    }
+
+    render(template, viewModel) {
+        incrementaldom.patch(
+            this.element,
+            template,
+            viewModel
+        );
+    }
+};
+
+todo.app.init = function() {
+    var app = new todo.app.TodoList(
+        document.getElementById('app')
+    );
+    app.updatePage();
+    todo.app.onReload = function() {
+        app.updatePage();
     };
-});
+};

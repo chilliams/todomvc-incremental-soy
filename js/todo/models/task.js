@@ -1,10 +1,11 @@
-goog.provide('todo.models.Item');
+goog.provide('todo.models.Task');
 
 goog.require('goog.string');
 
-todo.models.Item = class {
-    constructor(onChange, text) {
+todo.models.Task = class {
+    constructor(onChange, taskList, text) {
         this.onChange = onChange;
+        this.taskList = taskList;
         this.text = text;
         this.completed = false;
         this.editing = false;
@@ -31,5 +32,13 @@ todo.models.Item = class {
             this.text = value;
         }
         this.stopEdit();
+    }
+
+    destroy() {
+        var index = this.taskList.tasks.indexOf(this);
+        if (index > -1) {
+            this.taskList.tasks.splice(index, 1);
+            this.onChange();
+        }
     }
 };
