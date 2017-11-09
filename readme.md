@@ -1,35 +1,19 @@
-# Framework Name • [TodoMVC](http://todomvc.com)
+# Soy with Incremental DOM Demo App
 
-> Official description of the framework (from its website)
+## Overview
 
+This is an implementation of [TodoMVC](http://todomvc.com/) using Soy templates compiled to IncrementalDOM.
 
-## Resources
+## Hacking On The App
 
-- [Website]()
-- [Documentation]()
-- [Used by]()
-- [Blog]()
-- [FAQ]()
+You will need to install the [boot build tool](https://github.com/boot-clj/boot).
 
-### Articles
+Once you have boot installed you can run:
 
-- [Interesting article]()
+    boot dev
 
-### Support
+and open your browser to [localhost:3000](http://localhost:3000/). Changes you make to the view models and Soy templates will auto compile and re-render in the browser without refreshing the page.
 
-- [Stack Overflow](http://stackoverflow.com/questions/tagged/__)
-- [Google Groups]()
-- [Twitter](http://twitter.com/__)
-- [Google+]()
+To run a "production" build with advanced compilation run:
 
-*Let us [know](https://github.com/tastejs/todomvc/issues) if you discover anything worth sharing.*
-
-
-## Implementation
-
-How was the app created? Anything worth sharing about the process of creating the app? Any spec violations?
-
-
-## Credit
-
-Created by [Your Name](http://your-website.com)
+    boot prod

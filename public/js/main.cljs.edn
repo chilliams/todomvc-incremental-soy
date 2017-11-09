@@ -1,5 +1,5 @@
 {:require [soy todo.app]
  :compiler-options {:language-in :es6
                     :language-out :es5}
- :init-fns [todo.app/init]
+ :init-fns [todo.app/main]
  :boot-reload {:on-jsload todo.app/onReload}}

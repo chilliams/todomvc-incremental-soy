@@ -1,37 +1,28 @@
 goog.provide('todo.models.Task');
 
-goog.require('goog.string');
-
+/** Models an entry in our Todo list */
 todo.models.Task = class {
+    /**
+     * @constructor
+     * @param {Function} onChange
+     * @param {Array<todo.models.Task} taskList
+     * @param {string} text
+     */
     constructor(onChange, taskList, text) {
+        /** @const {Function} */
         this.onChange = onChange;
+        /** @const {todo.models.TaskList} */
         this.taskList = taskList;
+        /** @const {string} */
         this.text = text;
+        /** @type {boolean} */
         this.completed = false;
-        this.editing = false;
     }
 
+    /** @param {bool} completed */
     setCompleted(completed) {
         this.completed = completed;
         this.onChange();
-    }
-
-    startEdit() {
-        this.editing = true;
-        this.onChange();
-    }
-
-    stopEdit() {
-        this.editing = false;
-        this.onChange();
-    }
-
-    setText(text) {
-        var value = goog.string.trim(text);
-        if (!goog.string.isEmptyOrWhitespace(value)) {
-            this.text = value;
-        }
-        this.stopEdit();
     }
 
     destroy() {

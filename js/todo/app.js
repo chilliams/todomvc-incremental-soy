@@ -1,54 +1,38 @@
 goog.provide('todo.app');
 
-goog.require('goog.History');
 goog.require('incrementaldom');
 goog.require('todo.models.TaskList');
 goog.require('todo.TodoListViewModel');
 goog.require('todo.views');
 
-todo.app.TodoList = class {
-    constructor(element) {
-        this.element = element;
-        this.taskList = new todo.models.TaskList(
-            this.updatePage.bind(this)
-        );
+/** Start the app */
+todo.app.main = function() {
+    var app = new todo.app.TodoList();
+    app.updatePage();
 
-        this.history = new goog.History();
-        this.history.setEnabled(true);
-        goog.events.listen(
-            this.history,
-            goog.History.EventType.NAVIGATE,
+    /** Allow for hot swapping */
+    todo.app.onReload = function() {
+        app.updatePage();
+    };
+};
+
+/** Top-level code for the app */
+todo.app.TodoList = class {
+    /** @constructor */
+    constructor() {
+        /** @const {todo.models.TaskList} */
+        this.taskList = new todo.models.TaskList(
             this.updatePage.bind(this)
         );
     }
 
     updatePage() {
         console.time('update page');
-        this.render(
+        incrementaldom.patch(
+            document.getElementById('root'),
             todo.views.TodoList,
-            new todo.TodoListViewModel({
-                taskList: this.taskList,
-                route: this.history.getToken()
-            })
+            new todo.TodoListViewModel(this.taskList)
         );
         console.timeEnd('update page');
     }
-
-    render(template, viewModel) {
-        incrementaldom.patch(
-            this.element,
-            template,
-            viewModel
-        );
-    }
-};
-
-todo.app.init = function() {
-    var app = new todo.app.TodoList(
-        document.getElementById('app')
-    );
-    app.updatePage();
-    todo.app.onReload = function() {
-        app.updatePage();
-    };
 };

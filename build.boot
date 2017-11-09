@@ -11,25 +11,12 @@
                  [adzerk/boot-cljs "2.1.4"]
                  [pandeiro/boot-http "0.8.3"]
                  [adzerk/boot-reload "0.5.2"]
-                 [adzerk/boot-cljs-repl "0.3.3"]       ;; add bREPL
-                 [com.cemerick/piggieback "0.2.1"]     ;; needed by bREPL
-                 [weasel "0.7.0"]                      ;; needed by bREPL
-                 [org.clojure/tools.nrepl "0.2.12"]    ;; needed by bRELP
-                 [adzerk/boot-test "1.2.0"]
-                 [crisptrutski/boot-cljs-test "0.3.4"]
-                 [cljsjs/redux "3.6.0-0"]
-                 [http-kit "2.2.0"]
-                 [org.clojure/data.json "0.2.6"]
                  [com.google.template/soy "2017-04-23-chilliams"]
-                 [bidi "2.1.2"]
                  ])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
          '[adzerk.boot-reload :refer [reload]]
-         '[adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]
-         '[adzerk.boot-test :refer [test]]
-         '[crisptrutski.boot-cljs-test :refer [test-cljs]]
          '[boot.core :as boot]
          '[clojure.java.io :as io])
 
@@ -80,13 +67,11 @@
   []
   (comp
    (serve :dir "target"
-          :httpkit true
           :resource-root "target"
           :reload true)
    (watch)
    (soy)
    (reload)
-   (cljs-repl) ;; before cljs
    (cljs)
    (target :dir #{"target"})))
 
