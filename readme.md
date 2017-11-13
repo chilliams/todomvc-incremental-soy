@@ -12,7 +12,7 @@ Once you have boot installed you can run:
 
     boot dev
 
-and open your browser to [localhost:3000](http://localhost:3000/). Changes you make to the view models and Soy templates will auto compile and re-render in the browser without refreshing the page.
+and open your browser to [localhost:3000](http://localhost:3000/). Changes you make to the Soy templates will auto compile and re-render in the browser without refreshing the page.
 
 To run a "production" build with advanced compilation run:
 
