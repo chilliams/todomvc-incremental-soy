@@ -15,6 +15,13 @@ todo.models.TaskList = class {
         }.bind(this);
         /** @const {Array<todo.models.Task>} */
         this.tasks = [];
+
+        for (var i = 0; i < 10000; i++) {
+            this.tasks.push(
+                new todo.models.Task(this.onChange, this, 'test-' + i)
+            );
+        }
+
         this.updateFields();
 
         this.newTodoKeyup = this.newTodoKeyup.bind(this);
@@ -24,7 +31,7 @@ todo.models.TaskList = class {
 
     updateFields() {
         /** @type {number} */
-        this.totalCount = this.tasks.length;
+        this.totalCount = this.getTasks().length;
         /** @type {number} */
         this.completedCount = this.getCompletedTasks().length;
         /** @type {number} */
@@ -32,15 +39,22 @@ todo.models.TaskList = class {
     }
 
     /** @return {Array<todo.models.Task>} */
-    getCompletedTasks() {
+    getTasks() {
         return this.tasks.filter(function(task) {
+            return !task.deleted;
+        });
+    }
+
+    /** @return {Array<todo.models.Task>} */
+    getCompletedTasks() {
+        return this.getTasks().filter(function(task) {
             return task.completed;
         });
     }
 
     /** @return {Array<todo.models.Task>} */
     getTodoTasks() {
-        return this.tasks.filter(function(task) {
+        return this.getTasks().filter(function(task) {
             return !task.completed;
         });
     }

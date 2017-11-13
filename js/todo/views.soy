@@ -58,10 +58,13 @@
 {template .Task}
 {@param text: string}
 {@param completed: bool}
+{@param deleted: bool}
 {@param key: number}
 {@param setCompleted: attributes}
 {@param destroy: attributes}
-  <li key="{$key}" {if $completed}class="completed"{/if}>
+  <li key="{$key}"
+      {if $completed}class="completed"{/if}
+      {if $deleted}hidden{/if}>
     <div class="view">
       <input class="toggle {if $completed}checked{/if}"
              type="checkbox"

@@ -18,6 +18,8 @@ todo.models.Task = class {
         this.text = text;
         /** @type {boolean} */
         this.completed = false;
+        /** @type {boolean} */
+        this.deleted = false;
 
         this.setCompleted = this.setCompleted.bind(this);
         this.destroy = this.destroy.bind(this);
@@ -31,10 +33,7 @@ todo.models.Task = class {
 
     /** @param {Object} event */
     destroy(event) {
-        var index = this.taskList.tasks.indexOf(this);
-        if (index > -1) {
-            this.taskList.tasks.splice(index, 1);
-            this.onChange();
-        }
+        this.deleted = true;
+        this.onChange();
     }
 };
