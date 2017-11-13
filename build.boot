@@ -12,13 +12,15 @@
                  [pandeiro/boot-http "0.8.3"]
                  [adzerk/boot-reload "0.5.2"]
                  [com.google.template/soy "2017-04-23-chilliams"]
+                 [cljsjs/babel-standalone "6.18.1-3"]
                  ])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
          '[adzerk.boot-reload :refer [reload]]
          '[boot.core :as boot]
-         '[clojure.java.io :as io])
+         '[clojure.java.io :as io]
+         '[cljsjs.babel-standalone :as babel])
 
 (import com.google.template.soy.SoyFileSet)
 (import com.google.template.soy.incrementaldomsrc.SoyIncrementalDomSrcOptions)
@@ -61,6 +63,41 @@
               (boot/commit!)
               next-handler))))))
 
+(defonce babel-engine (delay (babel/create-engine)))
+
+(defn- compile-jsx!
+  [in-file out-file]
+  (let [jsx (slurp in-file)
+        text (babel/process @babel-engine jsx {:presets ["react" "es2016"]})]
+    (doto out-file
+      io/make-parents
+      (spit text))))
+
+(defn- jsx->js
+  [path]
+  (.replaceAll path "\\.jsx$" ".js"))
+
+(deftask jsx
+  "Compile .jsx files"
+  []
+  (let [tmp (boot/tmp-dir!)]
+    (fn middleware [next-handler]
+      (fn handler [fileset]
+        (boot/empty-dir! tmp)
+        (let [in-files (boot/input-files fileset)
+              jsx-files (boot/by-ext [".jsx"] in-files)]
+          (doseq [in jsx-files]
+            (let [in-file (boot/tmp-file in)
+                  in-path (boot/tmp-path in)
+                  out-path (jsx->js in-path)
+                  out-file (io/file tmp out-path)]
+              (compile-jsx! in-file out-file)))
+          (-> fileset
+              (boot/add-source tmp)
+              (boot/commit!)
+              next-handler))))))
+
+
 ;;; add dev task
 (deftask dev
   "Launch immediate feedback dev environment"
@@ -70,7 +107,7 @@
           :resource-root "target"
           :reload true)
    (watch)
-   (soy)
+   (jsx)
    (reload)
    (cljs)
    (target :dir #{"target"})))

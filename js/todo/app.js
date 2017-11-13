@@ -26,10 +26,9 @@ todo.app.TodoList = class {
 
     updatePage() {
         console.time('update page');
-        incrementaldom.patch(
-            document.getElementById('root'),
-            todo.views.TodoList,
-            this.todoList
+        ReactDOM.render(
+            todo.views.TodoList(this.todoList),
+            document.getElementById('root')
         );
         console.timeEnd('update page');
     }

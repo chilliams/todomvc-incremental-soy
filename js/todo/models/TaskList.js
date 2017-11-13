@@ -15,6 +15,15 @@ todo.models.TaskList = class {
         }.bind(this);
         /** @const {Array<todo.models.Task>} */
         this.tasks = [];
+
+        for (var i = 0; i < 10000; i++) {
+            this.tasks.push(new todo.models.Task(
+                this.onChange,
+                this,
+                'test-' + i
+            ));
+        }
+
         this.updateFields();
 
         this.newTodoKeyup = this.newTodoKeyup.bind(this);
