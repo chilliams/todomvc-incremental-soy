@@ -11,7 +11,17 @@ todo.app.main = function() {
 
     /** Allow for hot swapping */
     todo.app.onReload = function() {
-        app.updatePage();
+        // hacks on hacks on hacks
+        var oldList = app.todoList;
+        app.todoList = new todo.models.TaskList(function() {
+            app.updatePage();
+        });
+        app.todoList.tasks = oldList.tasks;
+        app.todoList.tasks.forEach(function(task) {
+            task.onChange = app.todoList.onChange;
+            task.taskList = app.taskList;
+        });
+        app.todoList.onChange();
     };
 };
 

@@ -19,8 +19,18 @@ todo.models.TaskList = class {
 
         this.newTodoKeyup = this.newTodoKeyup.bind(this);
         this.clearCompleted = this.clearCompleted.bind(this);
-        this.toggleAll = this.toggleAll.bind(this);
+        // this.toggleAll = this.toggleAll.bind(this);
     }
+
+    /** @param {Object} event */
+    // toggleAll(event) {
+    //     console.log(event);
+    //     // var completed = this.totalCount !== this.completedCount;
+    //     // this.tasks.forEach(function(task) {
+    //     //     return task.completed = completed;
+    //     // });
+    //     // // this.onChange();
+    // }
 
     updateFields() {
         /** @type {number} */
@@ -60,15 +70,6 @@ todo.models.TaskList = class {
     clearCompleted(event) {
         this.tasks = this.tasks.filter(function(task) {
             return !task.completed;
-        });
-        this.onChange();
-    }
-
-    /** @param {Object} event */
-    toggleAll(event) {
-        var completed = this.totalCount !== this.completedCount;
-        this.tasks.forEach(function(task) {
-            return task.completed = completed;
         });
         this.onChange();
     }
