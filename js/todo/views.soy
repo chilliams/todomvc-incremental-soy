@@ -1,73 +1,57 @@
 {namespace todo.views}
 
-{template .TodoList}
-{@param tasks: list<?>}
-{@param totalCount: int}
-{@param todoCount: int}
-{@param completedCount: int}
-{@param newTodoKeyup: attributes}
-{@param clearCompleted: attributes}
-{@param toggleAll: attributes}
-  <section class="todoapp">
-    <header class="header">
-      <h1>todos</h1>
-      <input class="new-todo"
-             placeholder="What needs to be done?"
-             onkeyup={$newTodoKeyup}
-             autofocus>
-    </header>
-    // This section should be hidden by default and shown when there are items
-    <section class="main" {if $totalCount == 0}hidden{/if}>
-      <input id="toggle-all"
-             class="toggle-all {if $totalCount == $completedCount}checked{/if}"
-             type="checkbox"
-             onchange={$toggleAll}>
-      <label for="toggle-all">Mark all as complete</label>
-      <ul class="todo-list">
-        {foreach $task in $tasks}
-          {call .Task data="$task" /}
-        {/foreach}
-      </ul>
-    </section>
-    <footer class="footer" {if $totalCount == 0}hidden{/if}>
-      // This should be `0 items left` by default
-      <span class="todo-count">
-        {if $todoCount == 1}
-          <strong>{$todoCount}</strong> item left
-        {else}
-          <strong>{$todoCount}</strong> items left
-        {/if}
-      </span>
-      // Hidden if no completed items are left
-      <button class="clear-completed"
-              onclick={$clearCompleted}
-              {if $completedCount == 0}hidden{/if}>
-        Clear completed
-      </button>
-    </footer>
-  </section>
-  <footer class="info">
-    <p>
-      Created by <a href="http://github.com/chilliams">
-        Christopher Williams
-      </a>
-    </p>
-  </footer>
+/**
+ * @param value
+ * @param onClick
+ */
+{template .square}
+  <button class="square" onclick={$onClick}>
+    {$value}
+  </button>
 {/template}
 
-{template .Task}
-{@param text: string}
-{@param completed: bool}
-{@param key: number}
-{@param setCompleted: attributes}
-{@param destroy: attributes}
-  <li key="{$key}" {if $completed}class="completed"{/if}>
-    <div class="view">
-      <input class="toggle {if $completed}checked{/if}"
-             type="checkbox"
-             onclick={$setCompleted}>
-      <label>{$text}</label>
-      <button class="destroy" onclick={$destroy}></button>
+/**
+ * @param squares
+ */
+{template .board}
+  <div>
+    <div className="board-row">
+      {$squares[0].render}
+      {$squares[1].render}
+      {$squares[2].render}
     </div>
-  </li>
+    <div className="board-row">
+      {$squares[3].render}
+      {$squares[4].render}
+      {$squares[5].render}
+    </div>
+    <div className="board-row">
+      {$squares[6].render}
+      {$squares[7].render}
+      {$squares[8].render}
+    </div>
+  </div>
+{/template}
+
+/**
+ * @param board
+ * @param moves
+ * @param status
+ */
+{template .game}
+  <div class="game">
+    <div class="game-board">
+      {$board.render}
+    </div>
+    <div class="game-info">
+      <div>{$status}</div>
+      <ol>
+        {foreach $move in $moves}
+          <li key="{index($move)}">
+            <button onclick={$move.onClick}>{$move.desc}</button>
+          </li>
+        {/foreach}
+      </ol>
+    </div>
+  </div>
 {/template}
