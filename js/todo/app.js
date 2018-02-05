@@ -49,10 +49,13 @@ todo.app.Board = class extends todo.Component {
     }
 
     renderSquare(i) {
-        return new todo.app.Square({
-            value: this.props.squares[i],
-            onClick: () => this.props.onClick(i),
-        });
+        return todo.Component.create(
+            todo.app.Square,
+            {
+                value: this.props.squares[i],
+                onClick: () => this.props.onClick(i),
+            },
+        );
     }
 
     getViewModel() {
@@ -131,10 +134,13 @@ todo.app.Game = class extends todo.Component {
         }
 
         return {
-            board: new todo.app.Board({
-                squares: current.squares,
-                onClick: (i) => this.handleClick(i),
-            }),
+            board: todo.Component.create(
+                todo.app.Board,
+                {
+                    squares: current.squares,
+                    onClick: (i) => this.handleClick(i),
+                },
+            ),
             moves: moves,
             status: status,
         };
@@ -146,12 +152,12 @@ todo.app.main = () => {
     let renderComponent = () => {
         todo.Component.render(
             document.getElementById('root'),
-            new todo.app.Game()
+            todo.Component.create(todo.app.Game),
         );
 
         todo.Component.render(
             document.getElementById('root2'),
-            new todo.app.Game()
+            todo.Component.create(todo.app.Game),
         );
     };
 

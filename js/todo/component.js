@@ -12,21 +12,25 @@ goog.scope(() => {
                 updateFn = updater;
                 incrementaldom.patch(
                     element,
-                    () => {
-                        component.render();
-                    }
+                    component,
                 );
                 updateFn = undefined;
             };
             updater();
         }
 
-        constructor(view) {
-            this.view_ = view;
-            this.render = this.render.bind(this);
+        static create(component, args) {
+            let c = new component(args);
+            return () => {
+                c.render_();
+            };
         }
 
-        render() {
+        constructor(view) {
+            this.view_ = view;
+        }
+
+        render_() {
             this.update = updateFn;
             this.view_(this.getViewModel());
         }
